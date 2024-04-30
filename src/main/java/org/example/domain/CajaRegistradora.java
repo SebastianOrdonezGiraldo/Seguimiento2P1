@@ -1,11 +1,12 @@
 package org.example.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 
-public class CajaRegistradora implements Runnable{
+public class CajaRegistradora implements Runnable, Serializable {
     private static int contadorCajas = 0;
     private int idCaja;
     private BlockingQueue<Cliente> colaClientes;
@@ -63,10 +64,13 @@ public class CajaRegistradora implements Runnable{
                 return 0.0;
         }
     }
-
+    public void actualizarVentasTotal(double montoVenta) {
+        ventasTotal += montoVenta;
+    }
     public int getClientesAtendidos() {
         return clientesAtendidos.size();
     }
+
 
     public double getVentasTotal() {
         return ventasTotal;

@@ -6,4 +6,6 @@ public interface CajaRegistradoraServicio {
     void atenderCliente(Cliente cliente);
     int getClientesAtendidos();
     double getVentasTotal();
+    void iniciar();
+    void detener();
 }
