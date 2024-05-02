@@ -1,5 +1,7 @@
 package org.example.domain;
 
+import org.example.interfaces.ProductoRepository;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +14,15 @@ public class CajaRegistradora implements Runnable, Serializable {
     private BlockingQueue<Cliente> colaClientes;
     private List<Cliente> clientesAtendidos;
     private double ventasTotal;
-
-    public CajaRegistradora(BlockingQueue<Cliente> colaClientes) {
+    private ProductoRepository id;
+    public CajaRegistradora(BlockingQueue<Cliente> colaClientes, ProductoRepository id) {
         this.idCaja = ++contadorCajas;
         this.colaClientes = colaClientes;
         this.clientesAtendidos = new ArrayList<>();
         this.ventasTotal = 0;
+        this.id = id;
     }
+
 
     public void run() {
         while (true) {
@@ -35,7 +39,7 @@ public class CajaRegistradora implements Runnable, Serializable {
         try {
             double totalCompra = 0;
             for (Productos producto : cliente.getCarrito()) {
-                Thread.sleep(100); // Simular tiempo de procesamiento
+                Thread.sleep(2000); // Simular tiempo de procesamiento
                 totalCompra += calcularPrecio(producto); // Asignar precios aleatorios
             }
             ventasTotal += totalCompra;
@@ -74,5 +78,8 @@ public class CajaRegistradora implements Runnable, Serializable {
 
     public double getVentasTotal() {
         return ventasTotal;
+    }
+    public ProductoRepository getId() {
+        return id;
     }
 }

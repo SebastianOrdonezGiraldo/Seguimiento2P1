@@ -9,6 +9,7 @@ public class Cliente implements Serializable {
     private List<Productos> carrito;
     private long tiempoLlegada;
     private double totalCompra;
+    private int id;
 
 public Cliente() {
     carrito = new ArrayList<Productos>();
@@ -44,5 +45,11 @@ private void generarCarrito() {
         return total;
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 }

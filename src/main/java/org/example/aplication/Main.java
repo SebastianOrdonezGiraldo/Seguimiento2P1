@@ -26,6 +26,7 @@ public class Main {
     private static ClienteRepository clienteRepositorio = new ClienteRepository();
     private static List<CajaRegistradoraServicio> cajas = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
+    private static List<CajaRegistradoraServicio> cajas2 = new ArrayList<>();
 
     public static void main(String[] args) {
         CajaRegistradoraServicioImpl cajaServicio = new CajaRegistradoraServicioImpl(colaClientes, productoRepositorio);
@@ -83,7 +84,7 @@ public class Main {
     private static void iniciarSimulacion() {
         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("datos.dat"))) {
             objectOutputStream.writeObject(clienteRepositorio.cargarClientesAtendidos());
-            System.out.println("Datos guardados exitosamente en datos.dat");
+
         } catch (IOException e) {
             System.out.println("Error al guardar los datos en datos.dat: " + e.getMessage());
         }
@@ -91,20 +92,40 @@ public class Main {
 
 
 
+
     private static void mostrarEstadisticas() {
-        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("datos.dat"))) {
+        ObjectInputStream objectInputStream = null;
+        try {
+            objectInputStream = new ObjectInputStream(new FileInputStream("datos.dat"));
             List<Cliente> clientesAtendidos = (List<Cliente>) objectInputStream.readObject();
-            double ventasTotal = 0;
-            int clientesTotales = clientesAtendidos.size();
-            for (Cliente cliente : clientesAtendidos) {
-                ventasTotal += cliente.getTotalCompra();
+            if (clientesAtendidos != null && !clientesAtendidos.isEmpty()) {
+                double ventasTotal = 0;
+                int clientesTotales = clientesAtendidos.size();
+                for (Cliente cliente : clientesAtendidos) {
+                    ventasTotal += cliente.getTotalCompra();
+                }
+                System.out.println("Clientes atendidos: " + clientesTotales);
+                System.out.println("Ventas totales: $" + ventasTotal);
+            } else {
+                System.out.println("El archivo datos.dat no contiene datos válidos para mostrar estadísticas.");
             }
-            System.out.println("Clientes atendidos: " + clientesTotales);
-            System.out.println("Ventas totales: $" + ventasTotal);
+        } catch (FileNotFoundException e) {
+            System.out.println("El archivo datos.dat no fue encontrado. No hay estadísticas para mostrar.");
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Error al cargar las estadísticas desde datos.dat: " + e.getMessage());
+        } finally {
+            try {
+                if (objectInputStream != null) {
+                    objectInputStream.close();
+                }
+            } catch (Exception e) {
+                System.out.println("Error al cerrar el flujo de entrada: " + e.getMessage());
+            }
         }
-    }}
+    }
+    }
+
+
 
 
 
